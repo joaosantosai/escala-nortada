@@ -1,0 +1,10 @@
+# Fonte privada: nunca publicar no repositório público.
+/escala-nortada-2026-2028.html
+/guia-*.png
+/nortada-icon-*.png
+/nortada.webmanifest
+/*.xlsx
+.env
+*.secret
+node_modules/
+
