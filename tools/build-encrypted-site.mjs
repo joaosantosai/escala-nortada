@@ -40,6 +40,7 @@ const page = `<!doctype html>
     :root { color-scheme: light; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif; }
     * { box-sizing: border-box; }
     body { margin: 0; min-width: 320px; min-height: 100svh; display: grid; place-items: center; padding: 24px; color: #16181d; background: #f4f5f7; }
+    html.calendar-open, html.calendar-open body { width: 100%; height: 100%; min-height: 100%; display: block; padding: 0; overflow: hidden; }
     main { width: min(100%, 430px); padding: 32px 26px 26px; border: 1px solid #dfe2e7; border-radius: 28px; background: rgba(255,255,255,.96); box-shadow: 0 18px 55px rgba(22,24,29,.10); text-align: center; }
     img { width: 86px; height: 86px; border-radius: 22px; }
     .eyebrow { margin: 20px 0 6px; color: #2864dc; font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
@@ -54,6 +55,7 @@ const page = `<!doctype html>
     button:disabled { cursor: wait; opacity: .65; }
     .error { min-height: 20px; margin: 12px 0 0; color: #b42318; font-size: 13px; font-weight: 650; }
     footer { margin-top: 19px; color: #8a9099; font-size: 11px; line-height: 1.4; }
+    .calendar-frame { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; background: #f4f5f7; }
   </style>
 </head>
 <body>
@@ -100,9 +102,15 @@ const page = `<!doctype html>
       }
 
       function openCalendar(html) {
-        document.open();
-        document.write(html);
-        document.close();
+        const frame = document.createElement("iframe");
+        const baseHref = new URL("./", window.location.href).href.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+        frame.className = "calendar-frame";
+        frame.title = "Escala Nortada";
+        frame.setAttribute("aria-label", "Escala Nortada");
+        frame.srcdoc = html.replace(/<head>/i, '<head><base href="' + baseHref + '">');
+        document.documentElement.classList.add("calendar-open");
+        document.body.replaceChildren(frame);
+        document.title = "Escala Nortada · 2026–2028";
       }
 
       async function tryStoredKey() {
@@ -137,4 +145,3 @@ const page = `<!doctype html>
 
 writeFileSync(outputPath, page, "utf8");
 console.log(`Site cifrado criado em ${outputPath} a partir de ${basename(sourcePath)}.`);
-
