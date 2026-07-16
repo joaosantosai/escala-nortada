@@ -7,4 +7,4 @@
 .env
 *.secret
 node_modules/
-
+/.calendar-tests/
